@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<title>Tracer de cartes Arome 0010 et 0025</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style>
+		#carte{
+			margin: auto;
+			height: 600px;
+			width: 1200px;
+		}
+	</style>
+  </head>
+  <body>
+	<div class="container">
+		<h2 id="couche-choisie"></h2>
+		<h2 id="elevation-choisie"></h2>
+		<h2 id="reference-time-choisi"></h2>
+		<h2 id="time-choisi"></h2>
+		<div class="btn-group" role="group" aria-label="...">	
+			  <div class="btn-group btn-group-lg" role="group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Couches<span class="caret"></span></button>
+				<ul id="menu-couches" class="dropdown-menu"></ul>
+			  </div>
+			  <div class="btn-group btn-group-lg" role="group">
+				<button type="button" id="bouton-elevation" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Elevation<span class="caret"></span></button>
+				<ul id="menu-elevation" class="dropdown-menu"></ul>
+			  </div>	
+			  <div class="btn-group btn-group-lg" role="group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reference time<span class="caret"></span></button>
+				<ul id="menu-reference-time" class="dropdown-menu"></ul>
+			  </div>
+			  <div class="btn-group btn-group-lg" role="group">
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Time<span class="caret"></span></button>
+				<ul id="menu-time" class="dropdown-menu"></ul>
+			  </div>
+			  <div class="btn-group btn-group-lg" role="group">
+				<button id="afficher" type="button" class="btn btn-success">Afficher la carte</button>
+			  </div>
+		</div>
+		<p id="path"></p>
+		<div id="carte"></div>
+	</div>
+	
+	<script src="getAromeWMSCapabilities.js"></script>
+	<script src="getAromeWCSCapabilities.js"></script>
+	<script src="MFModeleWebService.js"></script>
+	<script src="getNomModeleMF.js"></script>
+	<script src="getCle.js"></script>
+	<script src="getMapPath.js"></script>
+	<script src="getMFWMSPath.js"></script>
+	<script src="traceGoogleMap.js"></script>
+	<script	src="http://maps.google.com/maps/api/js?libraries=geometry&key=AIzaSyCgHQo9IsE24JjDrBcS8X0yqkt6z36AvQ8" ></script>
+	<script>
+		$("#bouton-elevation").hide();
+		var nomModele="Arome0025";
+		var ws= new MFModeleWebService(nomModele);  // initilalisation du Web Service MF sur le modèle
+		var lesCouches=ws.getLesCouches();
+		var limitesGeo = new google.maps.LatLngBounds(new google.maps.LatLng(40,-6),new google.maps.LatLng(53,10));  // limites geo du trace des WMS
+		for (var i=0;i<ws.nbCouches;i++){  // ajout de lignes au menu
+			$("#menu-couches").append('<li><button class="couches-item" type="button" name="couche" id="couche'+i+'">'+ws.lesNomsDesCouches[i]+'</button></li>');
+		}
+		var elevation;
+		var reference_time="";
+		var time="";
+		var nomCouche="";
+		
+		$(".couches-item").click(function(){              // quand on choisi la couche
+			//var numCouche = $(this).attr("id");
+			$("#bouton-elevation").hide();
+			$("#menu-reference-time").html("");
+			$("#menu-time").html("");
+			$("#menu-elevation").html("");
+			$("#elevation-choisie").html("");
+			$("#reference-time-choisi").html("");
+			$("#time-choisi").html("");
+			nomCouche = $(this).text();
+			$("#couche-choisie").html(nomCouche);
+			reference_time=lesCouches[nomCouche]["reference_time"][lesCouches[nomCouche]["reference_time"].length-1]; // par défaut, on prendra le run le plus récent disponible pour cettte couche
+			$("#reference-time-choisi").html("Heure du Run (UTC) : "+reference_time); 
+			for (var dim in lesCouches[nomCouche]){    // on construit le reste des menus
+				//alert (dim+"  "+ lesCouches[nomCouche][dim].length);
+				for (var i=0;i<lesCouches[nomCouche][dim].length;i++){			
+					if (dim=="reference_time"){
+						$("#menu-reference-time").append('<li><button class="couches-reference-time" type="button" name="reference-time" id="reftime'+i+'">'+lesCouches[nomCouche][dim][i]+'</button></li>');
+					}
+					if ((dim=="time")&&(lesCouches[nomCouche][dim][i]>= reference_time)){  // on ajoute au menu que les prévision postérieures au run
+						$("#menu-time").append('<li><button class="couches-time" type="button" name="time" id="time'+i+'">'+lesCouches[nomCouche][dim][i]+'</button></li>');
+					}
+					if (dim=="elevation"){
+						$("#menu-elevation").append('<li><button class="couches-elevation" type="button" name="elevation" id="elevation'+i+'">'+lesCouches[nomCouche][dim][i]+'</button></li>');
+						$("#bouton-elevation").show();
+					}
+				}
+			}
+			$(".couches-elevation").click(function(){        // quand on choisi "elevation"
+				elevation=$(this).text();
+				$("#elevation-choisie").html("elevation : "+elevation);
+			});
+			$(".couches-reference-time").click(function(){   // quand on choisi "reference_time"
+				reference_time=$(this).text();
+				$("#reference-time-choisi").html("Heure du Run (UTC) : "+reference_time);
+			});
+			$(".couches-time").click(function(){             // quand on choisi "time"
+				time=$(this).text();
+				$("#time-choisi").html("Heure de la prevision (UTC) : "+time);
+			});
+		});
+		$("#afficher").click(function(){                     // quand on demande l'affichage de la carte
+			var path = getMFWMSPath(ws,nomCouche,limitesGeo,reference_time,time,elevation);   // on construit le path de la carte
+			$("#path").html(path);        // affichage du path construit
+			traceGoogleMap (path,limitesGeo,"carte");     // affichage de la carte sur une Google Map
+		});
+	</script>
+  </body>
+</html>

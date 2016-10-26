@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset=utf-8 />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+		
+    </style>
+	</style>
+    <title>Lecture GetCapabilities</title>
+  </head>
+  <body>
+	<h1 align="center">Lecture et traitement GetCapabilities Arome 0.01 et 0.025 (WMS et WCS)</h1>
+	<div id="cartes">Debut emplacement des cartes</div>
+	<div id="capabilities"></div>
+    <script src="getAromeWMSCapabilities.js"></script>
+	<script src="getAromeWCSCapabilities.js"></script>
+	<script src="MFModeleWebService.js"></script>
+	<script src="getNomModeleMF.js"></script>
+	<script src="getCle.js"></script>
+	<script src="getMapPath.js"></script>
+	<script	src="http://maps.google.com/maps/api/js?libraries=geometry&key=AIzaSyCgHQo9IsE24JjDrBcS8X0yqkt6z36AvQ8"></script>
+	<script>
+		var nomModele="Arome0010";
+		var ws= new MFModeleWebService(nomModele);  // initilalisation du Web Service MF sur le modèle
+		console.log ("nombre de couches : "+ws.nbCouches);
+		for (var i=0;i<ws.nbCouches;i++){  // affichage d'une carte de chaque couche
+			var path=getMapPath(nomModele,ws.lesNomsDesCouches[i])
+			element="c"+i;
+			console.log (i+" path : "+path);
+			$("#cartes").append('<p>'+i+'</p><br><p>'+path+'</p><br><div><div height=100% width=100% id="'+element+'">Div cx</div></div>');
+			traceGoogleMap (path,element);
+		}
+		/*
+		var nb=0;
+		for (var nom in ws.getLesCouches()) {
+			nb++;
+			console.log (nb+" nom de la couche : "+ nom);
+			for (var dimension in ws.getLesCouches()[nom]){
+				console.log ("    "+dimension+" longueur : "+ws.getLesCouches()[nom][dimension].length);
+				console.log ("    valeurs : "+ws.getLesCouches()[nom][dimension]);
+			}
+		}
+		for (var n=0;n<ws.getLesCoverageIds().length;n++){
+			$("#capabilities").append(n+1+" id = "+ws.getLesCoverageIds()[n]+"<br>");
+		}
+		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[0]);
+		function getAromeWCSDescribeCoverage(nomModele,coverageId){
+			var model=getNomModeleMF(nomModele);
+			var service="WCS";
+			cle_jpmv=getCle();
+			var url ="https://geoservices.meteofrance.fr/services/"+model+service+"?SERVICE="+service+"&version=2.0.1&REQUEST=DescribeCoverage&CoverageId="+coverageId+"&token="+cle_jpmv;
+			$.ajax({  // requette DescribeCoverage du service WCS
+				type: "GET",
+				url: url,
+				dataType: "xml",
+				success: parseDescribeCoverage,
+				error: function(){
+					console.log("erreur lecture Ajax");
+					}	
+			});
+			function parseDescribeCoverage(xml){
+				console.log("parseDescibeCoverage");
+				console.log(xml);
+			}
+		}
+		*/
+		function traceGoogleMap (path,element){
+			var elem=document.getElementById(element.toString());
+			elem.innerHTML = "Ici sera la carte";
+			console.log ("elem : "+elem);
+			var mop = new google.maps.Map(document.getElementById(element.toString()),{
+				zoom: 5,
+				noClear: true,
+				center: {lat: 45.740, lng: 3.18}
+			});
+			var imageAromeBounds = {
+				north: 55.4,
+				south: 37.5,
+				east: 16.,
+				west: -12.0
+			};
+			var imageAromeOptions = {
+				opacity : 0.5
+			};
+			aromeOverlay = new google.maps.GroundOverlay(path,imageAromeBounds,imageAromeOptions);
+			//'https://geoservices.meteofrance.fr/services/MF-NWP-HIGHRES-AROME-001-FRANCE-WMS?request=GetMap&service=WMS&version=1.3.0&CRS=EPSG:4326&token=__BvvAzSbJXLEdUJ--rRU0E1F8qi6cSxDp5x5AtPfCcuU__&LAYERS=GEOMETRIC_HEIGHT__GROUND_OR_WATER_SURFACE&styles=ALTITUDE__GROUND__NO_SHADING&format=image/png&width=1200&height=800&BBOX=37.5,-12,55.4,16.0&reference_time=2016-10-04T15:00:00Z&time=2016-10-04T15:00:00Z',
+			//'https://geoservices.meteofrance.fr/services/MF-NWP-HIGHRES-AROME-001-FRANCE-WMS?request=GetMap&service=WMS&version=1.3.0&CRS=EPSG:4326&token=__BvvAzSbJXLEdUJ--rRU0E1F8qi6cSxDp5x5AtPfCcuU__&LAYERS=BRIGHTNESS_TEMPERATURE__GROUND_OR_WATER_SURFACE&styles=BT__CHANNELS_108__SHADING&format=image/png&width=1564&height=1000&BBOX=37.5,-12.0,55.4,16.0&reference_time=2016-10-05T03:00:00Z&time=2016-10-06T18:00:00Z',
+			aromeOverlay.setMap(mop);
+		}
+			
+    </script>
+  </body>
+</html>

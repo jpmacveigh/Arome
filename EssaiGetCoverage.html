@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style>
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+	</style>
+    <title>Lecture getCoverage et describeCoverage</title>
+  </head>
+  <body>
+	<h1 align="center">Lecture et traitement getCoverage et describeCoverage Arome 0.01 et 0.025 (WCS)</h1>
+	<div id="coverages"></div>
+    <script src="getAromeWMSCapabilities.js"></script>
+	<script src="getAromeWCSCapabilities.js"></script>
+	<script src="MFModeleWebService.js"></script>
+	<script src="getNomModeleMF.js"></script>
+	<script src="getCle.js"></script>
+	<script src="getMapPath.js"></script>
+	<script src="getMFWMSPath.js"></script>
+	<script src="traceGoogleMap.js"></script>
+	<script	src="http://maps.google.com/maps/api/js?libraries=geometry&key=AIzaSyCgHQo9IsE24JjDrBcS8X0yqkt6z36AvQ8" ></script>
+	<script>
+		var nomModele="Arpege05";
+		var ws= new MFModeleWebService(nomModele);  // initilalisation du Web Service MF sur le modèle
+		console.log("nb de couches : "+ws.nbCouches);
+		var nb=0;
+		for (var nom in ws.getLesCouches()) {
+			nb++;
+			console.log (nb+" nom de la couche : "+ nom);
+			for (var dimension in ws.getLesCouches()[nom]){
+				console.log ("    "+dimension+" longueur : "+ws.getLesCouches()[nom][dimension].length);
+				console.log ("    valeurs : "+ws.getLesCouches()[nom][dimension]);
+			}
+		}
+		for (var n=0;n<ws.getLesCoverageIds().length;n++){
+			$("#coverages").append(n+1+" id = "+ws.getLesCoverageIds()[n]+"<br>");
+		}
+		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[0]);
+		function getAromeWCSDescribeCoverage(nomModele,coverageId){
+			var model=getNomModeleMF(nomModele);
+			var service="WCS";
+			cle_jpmv=getCle();
+			var url ="https://geoservices.meteofrance.fr/services/"+model+service+"?SERVICE="+service+"&version=2.0.1&REQUEST=DescribeCoverage&CoverageId="+coverageId+"&token="+cle_jpmv;
+			$.ajax({  // requette DescribeCoverage du service WCS
+				type: "GET",
+				url: url,
+				dataType: "xml",
+				success: parseDescribeCoverage,
+				error: function(){
+					console.log("erreur lecture Ajax");
+					}	
+			});
+			function parseDescribeCoverage(xml){
+				console.log("parseDescibeCoverage");
+				console.log(xml);
+			}
+		}
+    </script>
+  </body>
+</html>

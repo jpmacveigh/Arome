@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<meta charset=utf-8 />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <style></style>
+    <title>Lecture ficheir XML</title>
+  </head>
+  <body>
+	<h1 align="center">Essai lecture fichieir XML</h1>
+	<div id="Div_XML"></div>
+    <script>	
+		$(document).ready(  
+		 function()
+		 {
+		   $.ajax( {
+					type: "GET",
+					url: "data.xml",
+					dataType: "xml",
+					success: function(xml) 
+							 {
+							   $(xml).find('site').each(   
+								 function()
+								 {
+									var id = $(this).attr('id');
+									var title = $(this).find('title').text();
+									var url = $(this).find('url').text();
+									$('<div class="items" id="link_' + id + '"></div>').html('<a href="' + url + '">' + title + '</a>').appendTo('#Div_XML');
+									$(this).find('desc').each(
+													function()
+													{
+														var brief = $(this).find('brief').text();
+														var long = $(this).find('long').text();
+														$('<div class="brief"></div>').html(brief).appendTo('#link_'+id);
+														$('<div class="long"></div>').html(long).appendTo('#link_'+id);
+													});
+								  });
+							  }
+				});
+		  }
+		);
+    </script>
+  </body>
+</html>

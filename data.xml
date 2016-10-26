@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<sites>
+    <site id="0">
+        <url>http://www.pckult.net</url>
+        <desc>
+        	<title>PC Kult</title>
+            <brief>Résumé PC Kult</brief>
+            <long>Description longue PC Kult</long>
+        </desc>
+    </site> 
+    <site id="2">
+    	<title>Microsoft</title>
+        <url>http://www.microsoft.ca</url>
+        <desc>
+            <brief>Résumé Microsoft</brief>
+            <long>Description longue de Microsoft</long>
+        </desc>
+    </site>
+    <site id="3">
+    	<title>Intel</title>
+        <url>http://www.intel.com</url>
+        <desc>
+            <brief>Résumé pour Intel</brief>
+            <long>Description longue pour Intel</long>
+        </desc>
+    </site>
+</sites>  
