@@ -45,7 +45,6 @@ fonctionne mais souhaiterait un zoom plus fort sur le champs
 Get Coverage
 
 https://geoservices.meteofrance.fr/services/MF-NWP-GLOBAL-ARPEGE-05-GLOBE-WCS?service=WCS&version=2.0.1&REQUEST=GetCoverage&coverageid=TEMPERATURE__ISOBARIC_SURFACE___2016-10-15T00.00.00Z&subset=time(2016-10-15T12:00:00Z)&subset=lat(40,55)&subset=long(-5,10)&subset=pressure(850)&format=image/tiff&token=__BvvAzSbJXLEdUJ--rRU0E1F8qi6cSxDp5x5AtPfCcuU__
-
 ne fonctionne pas : 
 
 <ExceptionReport xmlns="http://www.opengis.net/ows/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/ows/2.0 owsExceptionReport.xsd" version="1.0.0" xml:lang="en">
@@ -53,3 +52,5 @@ ne fonctionne pas :
 Parameter subset is mandatory : only a 2D coverage can be downloaded
 </Exception>
 </ExceptionReport>
+
+<ExceptionReport xsi:schemaLocation="http://www.opengis.net/ows/2.0     owsExceptionReport.xsd" version="1.0.0" xml:lang="en"><Exception exceptionCode="MissingParameterValue" locator="subset">Parameter subset is mandatory : only a 2D coverage can be downloaded</Exception></ExceptionReport>
