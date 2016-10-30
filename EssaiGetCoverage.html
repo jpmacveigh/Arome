@@ -9,11 +9,14 @@
 			margin: 0;
 			padding: 0;
 	</style>
-    <title>Lecture getCoverage et describeCoverage</title>
+    <title>Lecture describeCoverage et getCoverage </title>
   </head>
   <body>
-	<h1 align="center">Lecture et traitement getCoverage et describeCoverage Arome 0.01 et 0.025 (WCS)</h1>
+	<h1 align="center">Lecture et traitement describeCoverage et getCoverage pour Arome 0.01 et 0.025 (WCS)</h1>
 	<div id="coverages"></div>
+	<hr>
+	<div id="getcoverage"></div>
+	<hr>
     <script src="getAromeWMSCapabilities.js"></script>
 	<script src="getAromeWCSCapabilities.js"></script>
 	<script src="MFModeleWebService.js"></script>
@@ -46,7 +49,9 @@
 		var elevation="";
 		var coveragePath=getMFWCSPath(ws,ws.getLesCoverageIds()[19],limitesGeo,time,elevation);
 		console.log(coveragePath);
-		alert (coveragePath);
+		//alert (coveragePath);
+		$("#coverages").append("<br>getCoveragePath : " +coveragePath+"<br>");
+		getAromeWCSGetCoverage(coveragePath);
 		function getAromeWCSDescribeCoverage(nomModele,coverageId){
 			var model=getNomModeleMF(nomModele);
 			var service="WCS";
@@ -64,6 +69,24 @@
 			function parseDescribeCoverage(xml){
 				console.log("parseDescibeCoverage");
 				console.log(xml);
+				
+			}
+		}
+		function getAromeWCSGetCoverage(path){
+			var url =path;
+			$.ajax({  // requette DescribeCoverage du service WCS
+				type: "GET",
+				url: url,
+				//dataType: "tiff",
+				success: parseGetCoverage,
+				error: function(){
+					console.log("erreur lecture GetCoverage");
+					}	
+			});
+			function parseGetCoverage(tiff){
+				console.log("parseGetCoverage");
+				console.log(tiff);
+				$("#getcoverage").text(tiff);
 			}
 		}
     </script>
