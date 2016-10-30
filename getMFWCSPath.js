@@ -8,7 +8,7 @@ function getMFWCSPath(ws,coverageID,limitesGeo,time,elevation){ // calcul du pat
 	path+= '&coverageid='+coverageID;      		// le coverageId fourni par getDescribeCoveragenom de la couche à tracer
 	path+= '&'+getSubsetGeo(limitesGeo);			// les subsets geographiques
 	path+= '&subset=time('+time+')';            // heure de la prévision
-	path+= '&subset=pressure(850)';             // niveau (à préciser en fonction du coverageId)
+	path+= '&subset=pressure(850)';             // niveau (à préciser en fonction du coverageId que l'on utilise)
 	return path;
 	function getSubsetGeo(limitesGeo){
 		// subset=lat(40,55)&subset=long(-5,10)
