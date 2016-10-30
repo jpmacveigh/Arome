@@ -40,12 +40,13 @@
 		for (var n=0;n<ws.getLesCoverageIds().length;n++){
 			$("#coverages").append(n+1+" id = "+ws.getLesCoverageIds()[n]+"<br>");
 		}
-		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[0]);
+		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[19]);
 		var limitesGeo = new google.maps.LatLngBounds(new google.maps.LatLng(40,-6),new google.maps.LatLng(53,10));  // limites geo du getCoverage
 		var time="";
 		var elevation="";
-		var coveragePath=getMFWCSPath(ws,ws.getLesCoverageIds()[0],limitesGeo,time,elevation);
+		var coveragePath=getMFWCSPath(ws,ws.getLesCoverageIds()[19],limitesGeo,time,elevation);
 		console.log(coveragePath);
+		alert (coveragePath);
 		function getAromeWCSDescribeCoverage(nomModele,coverageId){
 			var model=getNomModeleMF(nomModele);
 			var service="WCS";
