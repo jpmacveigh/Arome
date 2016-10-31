@@ -15,6 +15,8 @@
 	<h1 align="center">Lecture et traitement describeCoverage et getCoverage pour Arome 0.01 et 0.025 (WCS)</h1>
 	<div id="coverages"></div>
 	<hr>
+	<div id="describecoverage"></div>
+	<hr>
 	<div id="getcoverage"></div>
 	<hr>
     <script src="getAromeWMSCapabilities.js"></script>
@@ -52,7 +54,10 @@
 		//alert (coveragePath);
 		$("#coverages").append("<br>getCoveragePath : " +coveragePath+"<br>");
 		getAromeWCSGetCoverage(coveragePath);
+		
 		function getAromeWCSDescribeCoverage(nomModele,coverageId){  // Envoit et traite le résultat d'une requette "describeCoverage" au service Web Coverge Servicee (WCS)
+			var coverage=[];
+			coverage["Id"]=coverageId;
 			var model=getNomModeleMF(nomModele);
 			var service="WCS";
 			cle_jpmv=getCle();
@@ -69,9 +74,29 @@
 			function parseDescribeCoverage(xml){
 				console.log("parseDescibeCoverage");
 				console.log(xml);
+				$("#describecoverage").text(xml);
+				/*
+				wcs:CoverageDescriptions > wcs:CoverageDescription > gml:domainSet > gmlrgrid:ReferenceableGridByVectors > gmlrgrid:generalGridAxis:nth-child(4) > gmlrgrid:GeneralGridAxis > gmlrgrid:gridAxesSpanned
+				wcs:CoverageDescriptions > wcs:CoverageDescription > gml:domainSet > gmlrgrid:ReferenceableGridByVectors > gmlrgrid:generalGridAxis:nth-child(4) > gmlrgrid:GeneralGridAxis > gmlrgrid:gridAxesSpanned
+				<gmlrgrid:gridAxesSpanned xmlns:gmlrgrid="http://www.opengis.net/gml/3.3/rgrid">long</gmlrgrid:gridAxesSpanned>
+				/CoverageDescriptions/CoverageDescription/domainSet/ReferenceableGridByVectors/generalGridAxis[1]/GeneralGridAxis/gridAxesSpanned
+				<gmlrgrid:gridAxesSpanned xmlns:gmlrgrid="http://www.opengis.net/gml/3.3/rgrid">long</gmlrgrid:gridAxesSpanned>
+				*/
 				
+				/*
+				$(xml).find("wcs\\:Capabilities wcs\\:Contents wcs\\:CoverageSummary,CoverageSummary").each(function(){
+				var id=$(this).find("wcs\\:CoverageId,CoverageId").text();
+				lesCoverageIds.push(id);	
+				});
+				*/
+				$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gmlrgrid\\:GeneralGridAxis gmlrgrid\\:gridAxesSpanned,gridAxesSpanned").each(function(){
+				var id=$(this).text();
+				console.log("nom de l'axe : "+id);
+				});	
 			}
+			return coverage;
 		}
+		
 		function getAromeWCSGetCoverage(path){  // Envoit et traite le résultat d'une requette "getCoverage" au service Web Coverge Servicee (WCS)
 			var url =path;
 			$.ajax({  // requette "getCoverage" au service Web Coverge Servicee (WCS)
