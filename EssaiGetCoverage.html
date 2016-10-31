@@ -52,12 +52,12 @@
 		//alert (coveragePath);
 		$("#coverages").append("<br>getCoveragePath : " +coveragePath+"<br>");
 		getAromeWCSGetCoverage(coveragePath);
-		function getAromeWCSDescribeCoverage(nomModele,coverageId){
+		function getAromeWCSDescribeCoverage(nomModele,coverageId){  // Envoit et traite le résultat d'une requette "describeCoverage" au service Web Coverge Servicee (WCS)
 			var model=getNomModeleMF(nomModele);
 			var service="WCS";
 			cle_jpmv=getCle();
 			var url ="https://geoservices.meteofrance.fr/services/"+model+service+"?SERVICE="+service+"&version=2.0.1&REQUEST=DescribeCoverage&CoverageId="+coverageId+"&token="+cle_jpmv;
-			$.ajax({  // requette DescribeCoverage du service WCS
+			$.ajax({  // requette "describeCoverage" au service Web Coverage Service (WCS)
 				type: "GET",
 				url: url,
 				dataType: "xml",
@@ -72,9 +72,9 @@
 				
 			}
 		}
-		function getAromeWCSGetCoverage(path){
+		function getAromeWCSGetCoverage(path){  // Envoit et traite le résultat d'une requette "getCoverage" au service Web Coverge Servicee (WCS)
 			var url =path;
-			$.ajax({  // requette DescribeCoverage du service WCS
+			$.ajax({  // requette "getCoverage" au service Web Coverge Servicee (WCS)
 				type: "GET",
 				url: url,
 				//dataType: "tiff",
