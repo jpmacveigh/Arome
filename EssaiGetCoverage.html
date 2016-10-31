@@ -30,7 +30,7 @@
 	<script src="traceGoogleMap.js"></script>
 	<script	src="http://maps.google.com/maps/api/js?libraries=geometry&key=AIzaSyCgHQo9IsE24JjDrBcS8X0yqkt6z36AvQ8" ></script>
 	<script>
-		var nomModele="Arpege05";
+		var nomModele="Arome0025";
 		var ws= new MFModeleWebService(nomModele);  // initilalisation du Web Service MF sur le modèle
 		console.log("nb de couches : "+ws.nbCouches);
 		var nb=0;
@@ -45,11 +45,11 @@
 		for (var n=0;n<ws.getLesCoverageIds().length;n++){
 			$("#coverages").append(n+1+" id = "+ws.getLesCoverageIds()[n]+"<br>");
 		}
-		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[19]);
+		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[555]);
 		var limitesGeo = new google.maps.LatLngBounds(new google.maps.LatLng(40,-6),new google.maps.LatLng(53,10));  // limites geo du getCoverage
 		var time="";
 		var elevation="";
-		var coveragePath=getMFWCSPath(ws,ws.getLesCoverageIds()[19],limitesGeo,time,elevation);
+		var coveragePath=getMFWCSPath(ws,ws.getLesCoverageIds()[555],limitesGeo,time,elevation);
 		console.log(coveragePath);
 		//alert (coveragePath);
 		$("#coverages").append("<br>getCoveragePath : " +coveragePath+"<br>");
