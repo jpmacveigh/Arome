@@ -45,7 +45,7 @@
 		for (var n=0;n<ws.getLesCoverageIds().length;n++){
 			$("#coverages").append(n+1+" id = "+ws.getLesCoverageIds()[n]+"<br>");
 		}
-		var rangCoverage=387;
+		var rangCoverage=292;
 		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[rangCoverage]);
 		var limitesGeo = new google.maps.LatLngBounds(new google.maps.LatLng(40,-6),new google.maps.LatLng(53,10));  // limites geo du getCoverage
 		var time="";
@@ -99,13 +99,14 @@
 				console.log ("low : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gml\\:limits gml\\:GridEnvelope gml\\:low,low").text());
 				console.log ("high : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gml\\:limits gml\\:GridEnvelope gml\\:high,high").text());
 				console.log ("pos : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gmlrgrid\\:origin gml\\:Point gml\\:pos,pos").text());
-				$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gmlrgrid\\:GeneralGridAxis gmlrgrid\\:gridAxesSpanned,gridAxesSpanned").each(function(){
-				var id=$(this).text();
-				console.log("nom de l'axe : "+id);
-				});
-				$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gmlrgrid\\:GeneralGridAxis gmlrgrid\\:coefficients,coefficients").each(function(){
-				var id=$(this).text();
-				console.log("Axis coefficients : "+id);
+				console.log ("boucle sur les axes :");
+				$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gmlrgrid\\:generalGridAxis gmlrgrid\\:GeneralGridAxis,GeneralGridAxis").each(function(){
+					var chaine=$(this).find("gmlrgrid\\:gridAxesSpanned,gridAxesSpanned").text();
+					console.log("********** nom de l'axe : "+chaine+"   ***************");
+					var chaine=$(this).find("gmlrgrid\\:offsetVector,offsetVector").text();
+					console.log("           offsetVector : "+chaine);
+					var chaine=$(this).find("gmlrgrid\\:coefficients,coefficients").text();
+					console.log("           Axis coefficients : "+chaine);
 				});
 			}
 			return coverage;
