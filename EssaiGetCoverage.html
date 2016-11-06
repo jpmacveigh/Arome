@@ -15,6 +15,8 @@
 	<h1 align="center">Lecture et traitement describeCoverage et getCoverage pour Arome 0.01 et 0.025 (WCS)</h1>
 	<div id="coverages"></div>
 	<hr>
+	<div id="describecoverage"></div>
+	<hr>
 	<div id="getcoverage"></div>
 	<hr>
     <script src="getAromeWMSCapabilities.js"></script>
@@ -28,7 +30,7 @@
 	<script src="traceGoogleMap.js"></script>
 	<script	src="http://maps.google.com/maps/api/js?libraries=geometry&key=AIzaSyCgHQo9IsE24JjDrBcS8X0yqkt6z36AvQ8" ></script>
 	<script>
-		var nomModele="Arpege05";
+		var nomModele="Arome0010";
 		var ws= new MFModeleWebService(nomModele);  // initilalisation du Web Service MF sur le modèle
 		console.log("nb de couches : "+ws.nbCouches);
 		var nb=0;
@@ -43,16 +45,20 @@
 		for (var n=0;n<ws.getLesCoverageIds().length;n++){
 			$("#coverages").append(n+1+" id = "+ws.getLesCoverageIds()[n]+"<br>");
 		}
-		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[19]);
+		var rangCoverage=292;
+		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[rangCoverage]);
 		var limitesGeo = new google.maps.LatLngBounds(new google.maps.LatLng(40,-6),new google.maps.LatLng(53,10));  // limites geo du getCoverage
 		var time="";
 		var elevation="";
-		var coveragePath=getMFWCSPath(ws,ws.getLesCoverageIds()[19],limitesGeo,time,elevation);
+		var coveragePath=getMFWCSPath(ws,ws.getLesCoverageIds()[rangCoverage],limitesGeo,time,elevation);
 		console.log(coveragePath);
 		//alert (coveragePath);
 		$("#coverages").append("<br>getCoveragePath : " +coveragePath+"<br>");
-		getAromeWCSGetCoverage(coveragePath);
+		//getAromeWCSGetCoverage(coveragePath);
+		
 		function getAromeWCSDescribeCoverage(nomModele,coverageId){  // Envoit et traite le résultat d'une requette "describeCoverage" au service Web Coverge Servicee (WCS)
+			var coverage=[];
+			coverage["Id"]=coverageId;
 			var model=getNomModeleMF(nomModele);
 			var service="WCS";
 			cle_jpmv=getCle();
@@ -69,8 +75,41 @@
 			function parseDescribeCoverage(xml){
 				console.log("parseDescibeCoverage");
 				console.log(xml);
+				$("#describecoverage").text(xml);
+				/*
+				wcs:CoverageDescriptions > wcs:CoverageDescription > gml:domainSet > gmlrgrid:ReferenceableGridByVectors > gmlrgrid:generalGridAxis:nth-child(4) > gmlrgrid:GeneralGridAxis > gmlrgrid:gridAxesSpanned
+				wcs:CoverageDescriptions > wcs:CoverageDescription > gml:domainSet > gmlrgrid:ReferenceableGridByVectors > gmlrgrid:generalGridAxis:nth-child(4) > gmlrgrid:GeneralGridAxis > gmlrgrid:gridAxesSpanned
+				<gmlrgrid:gridAxesSpanned xmlns:gmlrgrid="http://www.opengis.net/gml/3.3/rgrid">long</gmlrgrid:gridAxesSpanned>
+				/CoverageDescriptions/CoverageDescription/domainSet/ReferenceableGridByVectors/generalGridAxis[1]/GeneralGridAxis/gridAxesSpanned
+				<gmlrgrid:gridAxesSpanned xmlns:gmlrgrid="http://www.opengis.net/gml/3.3/rgrid">long</gmlrgrid:gridAxesSpanned>
+				*/
 				
+				/*
+				$(xml).find("wcs\\:Capabilities wcs\\:Contents wcs\\:CoverageSummary,CoverageSummary").each(function(){
+				var id=$(this).find("wcs\\:CoverageId,CoverageId").text();
+				lesCoverageIds.push(id);	
+				});
+				*/
+				console.log ("coverageID : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription wcs\\:CoverageId,CoverageId").text());
+				console.log ("beginPosition : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:boundedBy gml\\:EnvelopeWithTimePeriod gml\\:beginPosition,beginPosition").text());
+				console.log ("endPosition : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:boundedBy gml\\:EnvelopeWithTimePeriod gml\\:endPosition,endPosition").text());
+				console.log ("axisLabels : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gml\\:axisLabels,axisLabels").text());
+				console.log ("lowerCorner : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:boundedBy gml\\:EnvelopeWithTimePeriod gml\\:lowerCorner,lowerCorner").text());
+				console.log ("upperCorner : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:boundedBy gml\\:EnvelopeWithTimePeriod gml\\:upperCorner,upperCorner").text());
+				console.log ("low : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gml\\:limits gml\\:GridEnvelope gml\\:low,low").text());
+				console.log ("high : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gml\\:limits gml\\:GridEnvelope gml\\:high,high").text());
+				console.log ("pos : "+$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gmlrgrid\\:origin gml\\:Point gml\\:pos,pos").text());
+				console.log ("boucle sur les axes :");
+				$(xml).find("wcs\\:CoverageDescriptions wcs\\:CoverageDescription gml\\:domainSet gmlrgrid\\:ReferenceableGridByVectors gmlrgrid\\:generalGridAxis gmlrgrid\\:GeneralGridAxis,GeneralGridAxis").each(function(){
+					var chaine=$(this).find("gmlrgrid\\:gridAxesSpanned,gridAxesSpanned").text();
+					console.log("********** nom de l'axe : "+chaine+"   ***************");
+					var chaine=$(this).find("gmlrgrid\\:offsetVector,offsetVector").text();
+					console.log("           offsetVector : "+chaine);
+					var chaine=$(this).find("gmlrgrid\\:coefficients,coefficients").text();
+					console.log("           Axis coefficients : "+chaine);
+				});
 			}
+			return coverage;
 		}
 		function getAromeWCSGetCoverage(path){  // Envoit et traite le résultat d'une requette "getCoverage" au service Web Coverge Servicee (WCS)
 			var url =path;

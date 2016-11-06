@@ -1,7 +1,7 @@
-function getMFWMSPath(ws,nomCouche,limitesGeo,referenceTime,time,elevation){
+function getMFWMSPath(ws,nomCouche,limitesGeo,referenceTime,time,elevation){  // calcul du path pour une requete getMap sur le WMS de MF
 	 //https://geoservices.meteofrance.fr/services/MF-NWP-HIGHRES-AROME-001-FRANCE-WMS?request=GetMap&service=WMS&version=1.3.0&LAYERS=TEMPERATURE__SPECIFIC_HEIGHT_LEVEL_ABOVE_GROUND&CRS=EPSG:4326&styles=T__HEIGHT__SHADING&format=image/png&width=550&height=400&BBOX=40,-6,56,8&HEIGHT=2&reference_time=2016-09-16T00:00:00Z&time=2016-09-16T20:00:00Z&token=__BvvAzSbJXLEdUJ--rRU0E1F8qi6cSxDp5x5AtPfCcuU__
 	var nomModel=ws.getNomModel;
-	var style=ws.getLesCouches()[nomCouche]["style"];
+	var style=ws.lesCouches[nomCouche]["style"];
 	var height=1200;  // hauteur en pixels de la cartes demandée
 	path= 'https://geoservices.meteofrance.fr/services/'+getNomModeleMF(nomModele)+'WMS?request=GetMap&service=WMS&version=1.3.0&CRS=EPSG:4326';
 	path+= '&token='+getCle();        			// la clé de l'API fournie par MF
