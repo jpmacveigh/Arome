@@ -57,11 +57,11 @@
 	<script>
 		$("#bouton-elevation").hide();
 		var nomModele="Arome0025";
-		var ws= new MFModeleWebMapService(nomModele);  // initilalisation du Web Map Service MF sur le modèle
-		var lesCouches=ws.lesCouches;
+		var wms= new MFModeleWebMapService(nomModele);  // initilalisation du Web Map Service MF sur le modèle
+		var lesCouches=wms.lesCouches;
 		var limitesGeo = new google.maps.LatLngBounds(new google.maps.LatLng(40,-6),new google.maps.LatLng(53,10));  // limites geo du trace des WMS
-		for (var i=0;i<ws.nbCouches;i++){  // ajout de lignes au menu
-			$("#menu-couches").append('<li><button class="couches-item" type="button" name="couche" id="couche'+i+'">'+ws.lesNomsDesCouches[i]+'</button></li>');
+		for (var i=0;i<wms.nbCouches;i++){  // ajout de lignes au menu
+			$("#menu-couches").append('<li><button class="couches-item" type="button" name="couche" id="couche'+i+'">'+wms.lesNomsDesCouches[i]+'</button></li>');
 		}
 		var elevation;
 		var reference_time="";
@@ -110,7 +110,7 @@
 			});
 		});
 		$("#afficher").click(function(){                     // quand on demande l'affichage de la carte
-			var path = getMFWMSPath(ws,nomCouche,limitesGeo,reference_time,time,elevation);   // on construit le path de la carte
+			var path = getMFWMSPath(wms,nomCouche,limitesGeo,reference_time,time,elevation);   // on construit le path de la carte
 			$("#path").html(path);        // affichage du path construit
 			traceGoogleMap (path,limitesGeo,"carte");     // affichage de la carte sur une Google Map
 		});

@@ -21,7 +21,8 @@
 	<hr>
     <script src="getAromeWMSCapabilities.js"></script>
 	<script src="getAromeWCSCapabilities.js"></script>
-	<script src="MFModeleWebService.js"></script>
+	<script src="MFModeleWebMapService.js"></script>
+	<script src="MFModeleWebCoverageService.js"></script>
 	<script src="getNomModeleMF.js"></script>
 	<script src="getCle.js"></script>
 	<script src="getMapPath.js"></script>
@@ -31,26 +32,27 @@
 	<script	src="http://maps.google.com/maps/api/js?libraries=geometry&key=AIzaSyCgHQo9IsE24JjDrBcS8X0yqkt6z36AvQ8" ></script>
 	<script>
 		var nomModele="Arome0010";
-		var ws= new MFModeleWebService(nomModele);  // initilalisation du Web Service MF sur le modèle
-		console.log("nb de couches : "+ws.nbCouches);
+		var wms= new MFModeleWebMapService(nomModele);  // initilalisation du Web Map Service MF sur le modèle
+		console.log("nb de couches : "+wms.nbCouches);
 		var nb=0;
-		for (var nom in ws.getLesCouches()) {
+		for (var nom in wms.lesCouches) {
 			nb++;
 			console.log (nb+" nom de la couche : "+ nom);
-			for (var dimension in ws.getLesCouches()[nom]){
-				console.log ("    "+dimension+" longueur : "+ws.getLesCouches()[nom][dimension].length);
-				console.log ("    valeurs : "+ws.getLesCouches()[nom][dimension]);
+			for (var dimension in wms.lesCouches[nom]){
+				console.log ("    "+dimension+" longueur : "+wms.lesCouches[nom][dimension].length);
+				console.log ("    valeurs : "+wms.lesCouches[nom][dimension]);
 			}
 		}
-		for (var n=0;n<ws.getLesCoverageIds().length;n++){
-			$("#coverages").append(n+1+" id = "+ws.getLesCoverageIds()[n]+"<br>");
+		var wcs= new MFModeleWebCoverageService(nomModele);  // initilalisation du Web Coverage Service MF sur le modèle
+		for (var n=0;n<wcs.lesCoverageIds.length;n++){
+			$("#coverages").append(n+1+" id = "+wcs.lesCoverageIds[n]+"<br>");
 		}
 		var rangCoverage=292;
-		getAromeWCSDescribeCoverage(nomModele,ws.getLesCoverageIds()[rangCoverage]);
+		getAromeWCSDescribeCoverage(nomModele,wcs.lesCoverageIds[rangCoverage]);
 		var limitesGeo = new google.maps.LatLngBounds(new google.maps.LatLng(40,-6),new google.maps.LatLng(53,10));  // limites geo du getCoverage
 		var time="";
 		var elevation="";
-		var coveragePath=getMFWCSPath(ws,ws.getLesCoverageIds()[rangCoverage],limitesGeo,time,elevation);
+		var coveragePath=getMFWCSPath(wcs,wcs.lesCoverageIds[rangCoverage],limitesGeo,time,elevation);
 		console.log(coveragePath);
 		//alert (coveragePath);
 		$("#coverages").append("<br>getCoveragePath : " +coveragePath+"<br>");
