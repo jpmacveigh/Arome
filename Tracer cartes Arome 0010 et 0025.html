@@ -47,7 +47,7 @@
 	
 	<script src="getAromeWMSCapabilities.js"></script>
 	<script src="getAromeWCSCapabilities.js"></script>
-	<script src="MFModeleWebService.js"></script>
+	<script src="MFModeleWebMapService.js"></script>
 	<script src="getNomModeleMF.js"></script>
 	<script src="getCle.js"></script>
 	<script src="getMapPath.js"></script>
@@ -57,8 +57,8 @@
 	<script>
 		$("#bouton-elevation").hide();
 		var nomModele="Arome0025";
-		var ws= new MFModeleWebService(nomModele);  // initilalisation du Web Service MF sur le modèle
-		var lesCouches=ws.getLesCouches();
+		var ws= new MFModeleWebMapService(nomModele);  // initilalisation du Web Map Service MF sur le modèle
+		var lesCouches=ws.lesCouches;
 		var limitesGeo = new google.maps.LatLngBounds(new google.maps.LatLng(40,-6),new google.maps.LatLng(53,10));  // limites geo du trace des WMS
 		for (var i=0;i<ws.nbCouches;i++){  // ajout de lignes au menu
 			$("#menu-couches").append('<li><button class="couches-item" type="button" name="couche" id="couche'+i+'">'+ws.lesNomsDesCouches[i]+'</button></li>');
