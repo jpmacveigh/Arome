@@ -19,7 +19,7 @@
 			width: 100%;
 		}
 	</style>
-    <title>Lecture GetCapabilities et tracé des cartes disponibles</title>
+    <title>Lecture GetCapabilities et tracï¿½ des cartes disponibles</title>
   </head>
   <body>
 	<h1 align="center">Lecture et traitement GetCapabilities Arome 0.01 et 0.025 (WMS et WCS)</h1>
@@ -32,12 +32,12 @@
 	<script src="getMapPath.js"></script>
 	<script src="getMFWMSPath.js"></script>
 	<script src="traceGoogleMap.js"></script>
-	<script	src="http://maps.google.com/maps/api/js?libraries=geometry&key=AIzaSyCgHQo9IsE24JjDrBcS8X0yqkt6z36AvQ8" ></script>
+	<script	src="https://maps.google.com/maps/api/js?libraries=geometry&key=AIzaSyCgHQo9IsE24JjDrBcS8X0yqkt6z36AvQ8" ></script>
 	<script>
 		var nomModele="Arome0010";
-		var ws= new MFModeleWebService(nomModele);  // initilalisation du Web Service MF sur le modèle
+		var ws= new MFModeleWebService(nomModele);  // initilalisation du Web Service MF sur le modï¿½le
 		var limitesGeo = new google.maps.LatLngBounds(new google.maps.LatLng(43,5),new google.maps.LatLng(45.5,7.5));  // limites geo du trace des WMS
-		for (var i=0;i<ws.nbCouches;i++){  // preparation de la page qui va recevoir le tracé des cartes
+		for (var i=0;i<ws.nbCouches;i++){  // preparation de la page qui va recevoir le tracï¿½ des cartes
 			element="c"+i;
 			var path=getMapPath(ws,limitesGeo,ws.lesNomsDesCouches[i]);
 			console.log (i+" path : "+path);

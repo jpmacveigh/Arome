@@ -16,7 +16,7 @@ function getAromeWCSDescribeCoverage(nomModele,coverageId){  // Envoit et traite
 			console.log("erreur lecture Ajax dans requete 'describeCoverage'");
 			}	
 	});
-	function parseDescribeCoverage(xml){
+	function parseDescribeCoverage(xml){   // décodage et affichage du résultat de la requête describeCoverage
 		console.log("parseDescibeCoverage");
 		console.log(xml);
 		$("#describecoverage").text(xml);    // affichage du xml renvoyé par la requete "describeCoverage"
